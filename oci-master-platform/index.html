@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCI Master Suite | Plataforma Interactiva de Evaluación y Exposición</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"Fira Code"', 'monospace'],
+          },
+          colors: {
+            oracle: {
+              red: '#C74634',
+              darkred: '#9e2e1e',
+              black: '#161513',
+              dark: '#1e1c1a',
+              card: '#22201d',
+              border: '#383430',
+              accent: '#f26522',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .custom-range {
+      accent-color: #C74634;
+    }
+    .code-json {
+      color: #cbd5e1;
+    }
+    .json-key { color: #38bdf8; }
+    .json-string { color: #4ade80; }
+    .json-number { color: #f59e0b; }
+    .json-boolean { color: #c084fc; }
+    .json-null { color: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-full flex flex-col bg-slate-950 font-sans selection:bg-oracle-red selection:text-white">
+
+  <!-- TOP HEADER / NAV -->
+  <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Brand / Title -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-oracle-red to-orange-600 flex items-center justify-center shadow-lg shadow-oracle-red/30 text-white font-bold tracking-wider">
+            OCI
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-extrabold text-lg text-white tracking-tight">OCI Master Suite</span>
+              <span class="px-2 py-0.5 text-xs font-semibold uppercase tracking-wider bg-oracle-red/20 text-red-400 border border-oracle-red/30 rounded-full">Gen 2 Cloud</span>
+            </div>
+            <p class="text-xs text-slate-400">Plataforma Técnica de Evaluación, Terminal CLI y Apoyo para Exposición</p>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="hidden md:flex space-x-1 lg:space-x-2">
+          <button onclick="switchTab('quiz')" id="nav-quiz" class="nav-btn px-3 py-2 text-sm font-medium rounded-lg transition-all flex items-center space-x-2 text-white bg-slate-800 border border-slate-700">
+            <svg class="w-4 h-4 text-oracle-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Quiz Evaluador</span>
+          </button>
+          <button onclick="switchTab('cli')" id="nav-cli" class="nav-btn px-3 py-2 text-sm font-medium rounded-lg transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span>Simulador OCI CLI</span>
+          </button>
+          <button onclick="switchTab('calc')" id="nav-calc" class="nav-btn px-3 py-2 text-sm font-medium rounded-lg transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            <span>Calculadora TCO</span>
+          </button>
+          <button onclick="switchTab('guide')" id="nav-guide" class="nav-btn px-3 py-2 text-sm font-medium rounded-lg transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>Guía Exposición (5 Integrantes)</span>
+          </button>
+          <button onclick="switchTab('cheatsheet')" id="nav-cheatsheet" class="nav-btn px-3 py-2 text-sm font-medium rounded-lg transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <span>Arquitectura Base</span>
+          </button>
+        </nav>
+
+        <!-- Quick Status Indicator -->
+        <div class="flex items-center space-x-3">
+          <div class="hidden sm:flex items-center space-x-2 px-2.5 py-1 rounded-md bg-slate-800/70 border border-slate-700/60 text-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-slate-300">Región: <strong class="text-white">us-ashburn-1</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Bar -->
+    <div class="flex md:hidden overflow-x-auto px-4 py-2 bg-slate-900 border-t border-slate-800 space-x-2 text-xs">
+      <button onclick="switchTab('quiz')" class="mobile-tab-btn whitespace-nowrap px-3 py-1.5 rounded-md bg-slate-800 text-white font-medium" data-target="quiz">📝 Quiz</button>
+      <button onclick="switchTab('cli')" class="mobile-tab-btn whitespace-nowrap px-3 py-1.5 rounded-md text-slate-300 font-medium" data-target="cli">🖥️ Terminal CLI</button>
+      <button onclick="switchTab('calc')" class="mobile-tab-btn whitespace-nowrap px-3 py-1.5 rounded-md text-slate-300 font-medium" data-target="calc">💰 Costes</button>
+      <button onclick="switchTab('guide')" class="mobile-tab-btn whitespace-nowrap px-3 py-1.5 rounded-md text-slate-300 font-medium" data-target="guide">👥 5 Expositores</button>
+      <button onclick="switchTab('cheatsheet')" class="mobile-tab-btn whitespace-nowrap px-3 py-1.5 rounded-md text-slate-300 font-medium" data-target="cheatsheet">📋 Arquitectura</button>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- ========================================== -->
+    <!-- 1. MÓDULO QUIZ INTERACTIVO -->
+    <!-- ========================================== -->
+    <section id="tab-quiz" class="space-y-6">
+      <!-- Quiz Header Card -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-850 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-oracle-red/10 border border-oracle-red/20 text-oracle-red text-xs font-semibold mb-2">
+            <span>CERTIFICATION READY</span> • Evaluador de Competencias OCI
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Test Técnico de Arquitectura OCI</h1>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl">
+            10 reactivos rigurosos sobre arquitectura física y lógica, cómputo flexible, storage, bases de datos autónomas, modelos multicloud e híbridos y políticas de costes.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block">Progreso actual</span>
+            <span id="quiz-progress-text" class="text-lg font-bold text-white">Pregunta 1 de 10</span>
+          </div>
+          <button onclick="resetQuiz()" class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg border border-slate-700 transition-colors flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Reiniciar
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Score & Progress Bar -->
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="text-xs text-slate-400">Puntaje</span>
+          <span id="quiz-score-badge" class="font-mono font-bold text-emerald-400 text-base">0 pts</span>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="text-xs text-slate-400">Aciertos</span>
+          <span id="quiz-correct-count" class="font-mono font-bold text-sky-400 text-base">0 / 0</span>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="text-xs text-slate-400">Efectividad</span>
+          <span id="quiz-accuracy" class="font-mono font-bold text-amber-400 text-base">0%</span>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+          <span class="text-xs text-slate-400">Estado</span>
+          <span id="quiz-status-pill" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium">En curso</span>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+        <div id="quiz-progress-bar" class="bg-gradient-to-r from-oracle-red to-orange-500 h-full w-[10%] transition-all duration-300"></div>
+      </div>
+
+      <!-- Question Card Container -->
+      <div id="quiz-card" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl transition-all">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Quiz Results Modal / Panel (Hidden by default) -->
+      <div id="quiz-results-panel" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+        <div class="w-20 h-20 rounded-full mx-auto flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" id="result-icon-container">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white" id="result-title">¡Evaluación Completada!</h2>
+          <p class="text-slate-400 text-sm mt-1" id="result-subtitle">Has concluido todas las preguntas técnicas de OCI.</p>
+        </div>
+
+        <div class="max-w-md mx-auto grid grid-cols-2 gap-4 py-4">
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="text-xs text-slate-400 block mb-1">Aciertos Totales</span>
+            <span id="final-score" class="text-3xl font-extrabold text-white font-mono">10 / 10</span>
+          </div>
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="text-xs text-slate-400 block mb-1">Calificación</span>
+            <span id="final-percentage" class="text-3xl font-extrabold text-emerald-400 font-mono">100%</span>
+          </div>
+        </div>
+
+        <div id="result-feedback-box" class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
+          <!-- Feedback comment -->
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 pt-2">
+          <button onclick="resetQuiz()" class="px-6 py-2.5 rounded-lg bg-oracle-red hover:bg-oracle-darkred text-white font-medium text-sm transition-colors shadow-lg shadow-oracle-red/30">
+            Reintentar Evaluación
+          </button>
+          <button onclick="switchTab('cli')" class="px-6 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-sm transition-colors border border-slate-700">
+            Practicar en Terminal OCI CLI →
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 2. SIMULADOR TERMINAL OCI CLI -->
+    <!-- ========================================== -->
+    <section id="tab-cli" class="hidden space-y-6">
+      <!-- Terminal Intro Header -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+            <span>INTERACTIVE SHELL</span> • OCI CLI v3.39.0 (Python 3.10)
+          </div>
+          <h2 class="text-2xl font-bold text-white tracking-tight">Simulador Interactivo de Comandos OCI CLI</h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl">
+            Ejecuta comandos reales de gestión de infraestructura en Oracle Cloud. La terminal simula la respuesta estructurada en JSON de las APIs REST de OCI.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="clearTerminal()" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700">
+            Limpiar (clear)
+          </button>
+          <button onclick="insertAndRunCommand('help')" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-lg border border-slate-700">
+            Comandos de Ayuda
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Command Presets / Buttons for Live Demo -->
+      <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2.5">
+          Comandos Rápidos para Exposición (Clic para Ejecutar):
+        </span>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button onclick="insertAndRunCommand('oci iam compartment list')" class="px-2.5 py-1.5 rounded-md bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/70 font-mono transition">
+            <span class="text-oracle-red font-bold">1.</span> oci iam compartment list
+          </button>
+          <button onclick="insertAndRunCommand('oci compute instance launch')" class="px-2.5 py-1.5 rounded-md bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/70 font-mono transition">
+            <span class="text-oracle-red font-bold">2.</span> oci compute instance launch
+          </button>
+          <button onclick="insertAndRunCommand('oci db autonomous-database create')" class="px-2.5 py-1.5 rounded-md bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/70 font-mono transition">
+            <span class="text-oracle-red font-bold">3.</span> oci db autonomous-database create
+          </button>
+          <button onclick="insertAndRunCommand('oci os bucket create')" class="px-2.5 py-1.5 rounded-md bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/70 font-mono transition">
+            <span class="text-oracle-red font-bold">4.</span> oci os bucket create
+          </button>
+          <button onclick="insertAndRunCommand('oci network vcn list')" class="px-2.5 py-1.5 rounded-md bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/70 font-mono transition">
+            <span class="text-oracle-red font-bold">5.</span> oci network vcn list
+          </button>
+          <button onclick="insertAndRunCommand('oci ce cluster create')" class="px-2.5 py-1.5 rounded-md bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/70 font-mono transition">
+            <span class="text-oracle-red font-bold">6.</span> oci ce cluster create (OKE)
+          </button>
+        </div>
+      </div>
+
+      <!-- Real Terminal Window -->
+      <div class="rounded-xl overflow-hidden border border-slate-800 bg-[#0d1117] shadow-2xl flex flex-col font-mono text-xs sm:text-sm">
+        <!-- Terminal Titlebar -->
+        <div class="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between select-none">
+          <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+            <span class="ml-2 text-slate-400 font-sans text-xs">bash - oci-cli@cloud-shell-iad: ~ (us-ashburn-1)</span>
+          </div>
+          <div class="flex items-center space-x-3 text-xs text-slate-500 font-sans">
+            <span>Auth: API Key [TENANCY_DEFAULT]</span>
+          </div>
+        </div>
+
+        <!-- Terminal Output History Area -->
+        <div id="terminal-screen" class="p-4 sm:p-6 overflow-y-auto max-h-[520px] min-h-[360px] space-y-4">
+          <div class="text-slate-400">
+            <p class="text-slate-200 font-bold mb-1">Oracle Cloud Infrastructure Command Line Interface (OCI CLI)</p>
+            <p>Escribe <span class="text-emerald-400 font-bold">help</span> para consultar la lista de comandos disponibles o usa los accesos rápidos arriba.</p>
+            <p class="text-xs text-slate-500 mt-1">Conectado a Tenancy: <span class="text-slate-300">ocid1.tenancy.oc1..aaaaaaaamastercorp99</span> | Región: <span class="text-slate-300">us-ashburn-1</span></p>
+          </div>
+        </div>
+
+        <!-- Terminal Input Line -->
+        <form onsubmit="handleTerminalSubmit(event)" class="bg-[#121820] border-t border-slate-800/80 px-4 py-3 flex items-center gap-2">
+          <span class="text-emerald-400 font-semibold select-none">cloud-user@oci:~$</span>
+          <input 
+            type="text" 
+            id="terminal-input" 
+            autocomplete="off" 
+            spellcheck="false" 
+            placeholder="Escribe un comando (ej: oci iam compartment list o help)..." 
+            class="flex-1 bg-transparent text-slate-100 outline-none border-none font-mono text-xs sm:text-sm placeholder:text-slate-600"
+          >
+          <button type="submit" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-sans transition">
+            Ejecutar ↵
+          </button>
+        </form>
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 3. CALCULADORA DE COSTES Y TCO -->
+    <!-- ========================================== -->
+    <section id="tab-calc" class="hidden space-y-6">
+      <!-- Calculator Header -->
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-2">
+            <span>FINANCIAL ARCHITECTURE</span> • Estimador Oficial de TCO
+          </div>
+          <h2 class="text-2xl font-bold text-white tracking-tight">Calculadora Comparativa de Costes: OCI vs AWS / Azure</h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl">
+            Comprueba en tiempo real el ahorro agresivo de OCI gracias a su cómputo flexible, storage predecible con VPUs y los <span class="text-amber-400 font-semibold">10 TB mensuales de salida de red (Egress) totalmente gratuitos</span>.
+          </p>
+        </div>
+        <div class="text-right bg-slate-950 px-4 py-3 rounded-xl border border-slate-800">
+          <span class="text-xs text-slate-400 block">Ahorro Promedio OCI</span>
+          <span class="text-xl font-extrabold text-emerald-400">Hasta 65% - 80%</span>
+        </div>
+      </div>
+
+      <!-- Controls & Output Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Interactive Controls (Left 6 cols) -->
+        <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <svg class="w-5 h-5 text-oracle-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            Dimensionamiento de Recursos
+          </h3>
+
+          <!-- Slider 1: vCPUs / OCPUs -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label for="calc-vcpu" class="text-sm font-medium text-slate-300">
+                Cómputo: <span class="font-bold text-white">vCPUs</span> (Forma Flexible E4/A1)
+              </label>
+              <span id="label-vcpu" class="px-2.5 py-0.5 rounded-md bg-slate-800 text-sky-400 font-mono text-sm font-bold border border-slate-700">8 vCPUs</span>
+            </div>
+            <input type="range" id="calc-vcpu" min="2" max="64" step="2" value="8" oninput="calculateTCO()" class="w-full custom-range cursor-pointer">
+            <p class="text-xs text-slate-500">OCI permite escalar vCPU y RAM de manera independiente sin saltar a instancias sobredimensionadas.</p>
+          </div>
+
+          <!-- Slider 2: RAM Memory -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label for="calc-ram" class="text-sm font-medium text-slate-300">
+                Memoria RAM: <span class="font-bold text-white">Gigabytes</span>
+              </label>
+              <span id="label-ram" class="px-2.5 py-0.5 rounded-md bg-slate-800 text-purple-400 font-mono text-sm font-bold border border-slate-700">32 GB</span>
+            </div>
+            <input type="range" id="calc-ram" min="4" max="256" step="4" value="32" oninput="calculateTCO()" class="w-full custom-range cursor-pointer">
+            <p class="text-xs text-slate-500">Relación personalizada de memoria: $0.0015 por GB/hora en OCI.</p>
+          </div>
+
+          <!-- Slider 3: Block Storage -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label for="calc-storage" class="text-sm font-medium text-slate-300">
+                Almacenamiento en Bloque (SSD NVMe): <span class="font-bold text-white">TB</span>
+              </label>
+              <span id="label-storage" class="px-2.5 py-0.5 rounded-md bg-slate-800 text-amber-400 font-mono text-sm font-bold border border-slate-700">2 TB</span>
+            </div>
+            <input type="range" id="calc-storage" min="0.5" max="20" step="0.5" value="2" oninput="calculateTCO()" class="w-full custom-range cursor-pointer">
+            <p class="text-xs text-slate-500">OCI Block Volume: $0.0255/GB-mes vs ~$0.08 a $0.10/GB-mes en AWS EBS gp3 (70% ahorro).</p>
+          </div>
+
+          <!-- Slider 4: Outbound Egress Data Transfer -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label for="calc-egress" class="text-sm font-medium text-slate-300">
+                Tráfico de Salida (Egress): <span class="font-bold text-white">TB / mes</span>
+              </label>
+              <span id="label-egress" class="px-2.5 py-0.5 rounded-md bg-slate-800 text-emerald-400 font-mono text-sm font-bold border border-slate-700">12 TB</span>
+            </div>
+            <input type="range" id="calc-egress" min="1" max="50" step="1" value="12" oninput="calculateTCO()" class="w-full custom-range cursor-pointer">
+            <div class="flex items-center gap-1.5 text-xs text-emerald-400">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>¡Los primeros 10 TB/mes en OCI tienen costo $0 USD!</span>
+            </div>
+          </div>
+
+          <!-- Presets for fast demonstration during presentation -->
+          <div class="pt-2 border-t border-slate-800">
+            <span class="text-xs text-slate-400 block mb-2 font-medium">Escenarios Prediseñados para la Exposición:</span>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setCalcScenario('startup')" class="px-2.5 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-center transition">
+                🚀 Startup / App Web
+              </button>
+              <button onclick="setCalcScenario('enterprise')" class="px-2.5 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-center transition">
+                🏢 Enterprise OLTP
+              </button>
+              <button onclick="setCalcScenario('analytics')" class="px-2.5 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-center transition">
+                📊 Big Data & Egress
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Comparative Results Cards (Right 6 cols) -->
+        <div class="lg:col-span-6 space-y-6">
+
+          <!-- Executive Savings Banner -->
+          <div class="bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs uppercase font-semibold tracking-wider text-emerald-400">Diferencial Económico</span>
+                <h4 class="text-2xl font-black text-white mt-1">Ahorro Mensual con OCI</h4>
+              </div>
+              <span id="tco-savings-percent" class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-sm font-bold font-mono">
+                -62% Menos
+              </span>
+            </div>
+
+            <div class="mt-4 flex items-baseline gap-3">
+              <span id="tco-savings-monthly" class="text-4xl sm:text-5xl font-black text-emerald-400 font-mono">$784 USD</span>
+              <span class="text-slate-400 text-sm">/ mes de ahorro</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-400">
+              Ahorro anual proyectado: <strong id="tco-savings-annual" class="text-white font-mono">$9,408 USD / año</strong> reinvertibles en innovación.
+            </div>
+          </div>
+
+          <!-- Direct Provider Comparison -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <h4 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Desglose de Costes Mensuales Estimados</h4>
+
+            <!-- OCI Row -->
+            <div class="p-4 rounded-xl bg-slate-950 border-2 border-oracle-red/40 space-y-2">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-oracle-red"></span>
+                  <span class="font-bold text-white">Oracle Cloud Infrastructure (OCI)</span>
+                </div>
+                <span id="cost-oci" class="text-xl font-black text-white font-mono">$482 USD</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="bar-oci" class="bg-oracle-red h-full w-[38%] transition-all duration-300"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 pt-1">
+                <span>Cómputo: <strong id="oci-comp-break" class="text-slate-300 font-mono">$320</strong></span>
+                <span>Storage: <strong id="oci-stor-break" class="text-slate-300 font-mono">$52</strong></span>
+                <span>Egress (Red): <strong id="oci-net-break" class="text-emerald-400 font-mono">$17</strong></span>
+              </div>
+            </div>
+
+            <!-- AWS Row -->
+            <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                  <span class="font-semibold text-slate-300">Amazon Web Services (AWS)</span>
+                </div>
+                <span id="cost-aws" class="text-lg font-bold text-amber-400 font-mono">$1,266 USD</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="bar-aws" class="bg-amber-500 h-full w-[95%] transition-all duration-300"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 pt-1">
+                <span>Cómputo (m6i/c6i): ~$640</span>
+                <span>EBS gp3: ~$180</span>
+                <span>Egress ($0.09/GB): ~$446</span>
+              </div>
+            </div>
+
+            <!-- Azure Row -->
+            <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-sky-500"></span>
+                  <span class="font-semibold text-slate-300">Microsoft Azure</span>
+                </div>
+                <span id="cost-azure" class="text-lg font-bold text-sky-400 font-mono">$1,310 USD</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="bar-azure" class="bg-sky-500 h-full w-[100%] transition-all duration-300"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 pt-1">
+                <span>Cómputo (D-series): ~$655</span>
+                <span>Premium SSD: ~$195</span>
+                <span>Egress ($0.087/GB): ~$460</span>
+              </div>
+            </div>
+
+            <!-- Pillar Benefits of OCI Pricing -->
+            <div class="p-3 bg-slate-800/40 rounded-lg text-xs text-slate-400 space-y-1">
+              <div class="flex items-center gap-2 text-slate-200 font-semibold">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span>3 Claves del Modelo de Precios OCI para Exponer:</span>
+              </div>
+              <p>• <strong>Precios Globalmente Uniformes:</strong> OCI cobra exactamente la misma tarifa por cómputo y storage en cualquier región del mundo (sin impuesto por latencia internacional).</p>
+              <p>• <strong>10 TB de Egress Gratis:</strong> El primer paquete de 10 terabytes por tenancy cada mes no tiene costo, y el excedente cuesta apenas ~$0.0085/GB (10 veces menos que AWS).</p>
+              <p>• <strong>Elasticidad Granular:</strong> Puedes aumentar o disminuir el rendimiento de Block Volume (VPUs) al vuelo sin reiniciar la instancia ni pagar de más.</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 4. GUÍA DE REPASO: 5 INTEGRANTES -->
+    <!-- ========================================== -->
+    <section id="tab-guide" class="hidden space-y-6">
+      
+      <!-- Guide Header -->
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold mb-2">
+            <span>PRESENTATION STRATEGY</span> • Repartición Equitativa de Exposición (5 Integrantes)
+          </div>
+          <h2 class="text-2xl font-bold text-white tracking-tight">Guía de Repaso y Defensa Técnica por Integrante</h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl">
+            Cada expositor cuenta con 2 diapositivas asignadas, conceptos clave a verbalizar, comandos a mencionar en terminal y las preguntas más probables del jurado o docente con su respectiva respuesta modelo.
+          </p>
+        </div>
+
+        <!-- Practice / Timer Toolbar -->
+        <div class="flex items-center gap-3 bg-slate-950 p-2 rounded-xl border border-slate-800">
+          <div class="text-left px-2">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Cronómetro Ensayo</span>
+            <span id="rehearsal-timer" class="font-mono text-lg font-bold text-white">04:00</span>
+          </div>
+          <button onclick="toggleTimer()" id="timer-toggle-btn" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition">
+            Iniciar
+          </button>
+          <button onclick="resetTimer()" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition">
+            ↺
+          </button>
+        </div>
+      </div>
+
+      <!-- Presenter Selector Tabs -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
+        <button onclick="selectSpeaker(1)" id="speaker-tab-1" class="speaker-pill p-3 sm:p-4 rounded-xl text-left border transition-all bg-slate-900 border-oracle-red shadow-lg shadow-oracle-red/10">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-oracle-red block mb-1">Diapositivas 1 y 2</span>
+          <span class="font-bold text-sm text-white block">Integrante 1</span>
+          <span class="text-xs text-slate-400 truncate block mt-0.5">Fundamentos & Infra Física</span>
+        </button>
+
+        <button onclick="selectSpeaker(2)" id="speaker-tab-2" class="speaker-pill p-3 sm:p-4 rounded-xl text-left border transition-all bg-slate-900/60 border-slate-800 hover:border-slate-700">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Diapositivas 3 y 4</span>
+          <span class="font-bold text-sm text-slate-300 block">Integrante 2</span>
+          <span class="text-xs text-slate-500 truncate block mt-0.5">Multicloud e Híbrida</span>
+        </button>
+
+        <button onclick="selectSpeaker(3)" id="speaker-tab-3" class="speaker-pill p-3 sm:p-4 rounded-xl text-left border transition-all bg-slate-900/60 border-slate-800 hover:border-slate-700">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Diapositivas 5 y 6</span>
+          <span class="font-bold text-sm text-slate-300 block">Integrante 3</span>
+          <span class="text-xs text-slate-500 truncate block mt-0.5">Compute, Red & Storage</span>
+        </button>
+
+        <button onclick="selectSpeaker(4)" id="speaker-tab-4" class="speaker-pill p-3 sm:p-4 rounded-xl text-left border transition-all bg-slate-900/60 border-slate-800 hover:border-slate-700">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Diapositivas 7 y 8</span>
+          <span class="font-bold text-sm text-slate-300 block">Integrante 4</span>
+          <span class="text-xs text-slate-500 truncate block mt-0.5">Bases Autónomas & PaaS</span>
+        </button>
+
+        <button onclick="selectSpeaker(5)" id="speaker-tab-5" class="speaker-pill p-3 sm:p-4 rounded-xl text-left border transition-all bg-slate-900/60 border-slate-800 hover:border-slate-700">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Diapositivas 9 y 10</span>
+          <span class="font-bold text-sm text-slate-300 block">Integrante 5</span>
+          <span class="text-xs text-slate-500 truncate block mt-0.5">Costes, IAM & Conclusión</span>
+        </button>
+      </div>
+
+      <!-- Presenter Dynamic Detail Container -->
+      <div id="speaker-content-area" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
+        <!-- Injected via JavaScript based on speaker ID -->
+      </div>
+
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 5. CHEATSHEET / ARQUITECTURA BASE -->
+    <!-- ========================================== -->
+    <section id="tab-cheatsheet" class="hidden space-y-6">
+      
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex justify-between items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-semibold mb-2">
+            <span>ARCHITECTURE SUMMARY</span> • Referencia Rápida
+          </div>
+          <h2 class="text-2xl font-bold text-white tracking-tight">Mapa Mental y Arquitectura Nuclear OCI</h2>
+          <p class="text-sm text-slate-400 mt-1">Glosario de conceptos estructurales indispensables para defender la exposición.</p>
+        </div>
+      </div>
+
+      <!-- Grid of Concept Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- Card 1 -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+          <div class="w-8 h-8 rounded-lg bg-oracle-red/20 text-oracle-red flex items-center justify-center font-bold text-sm">
+            01
+          </div>
+          <h3 class="font-bold text-white text-base">Regions & Availability Domains</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Una <strong>Región</strong> es un área geográfica localizada. Un <strong>Availability Domain (AD)</strong> es uno o más centros de datos aislados entre sí dentro de una región, con energía y refrigeración independientes.
+          </p>
+          <div class="p-2.5 bg-slate-950 rounded-lg text-[11px] text-slate-300">
+            💡 <em>Dato clave:</em> La red backbone entre ADs tiene latencia inferior a 1 milisegundo y ancho de banda masivo.
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+          <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm">
+            02
+          </div>
+          <h3 class="font-bold text-white text-base">Fault Domains (FDs)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Cada AD contiene exactamente <strong>3 Fault Domains</strong>. Son agrupaciones de hardware físico (racks, conmutadores y PDU) que permiten tolerar fallas a nivel de servidor sin necesidad de cruzar a otro AD.
+          </p>
+          <div class="p-2.5 bg-slate-950 rounded-lg text-[11px] text-slate-300">
+            💡 <em>Regla de oro:</em> Nunca coloques dos instancias de alta disponibilidad en el mismo Fault Domain.
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+            03
+          </div>
+          <h3 class="font-bold text-white text-base">Compartments (Compartimentos)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Unidad lógica fundamental de OCI para organizar y aislar recursos en la nube. A diferencia de AWS (que requiere crear cuentas separadas), en OCI un mismo tenancy aloja compartimentos jerárquicos.
+          </p>
+          <div class="p-2.5 bg-slate-950 rounded-lg text-[11px] text-slate-300">
+            💡 <em>Aislamiento:</em> Se aplican políticas IAM directamente al compartimento (`allow group Devs to manage in compartment Dev_Env`).
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm">
+            04
+          </div>
+          <h3 class="font-bold text-white text-base">Virtual Cloud Network (VCN)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Red de software (SDN) privada en OCI. Se divide en subredes públicas o privadas. Incluye componentes como Internet Gateway (IGW), NAT Gateway, Dynamic Routing Gateway (DRG) y Service Gateway.
+          </p>
+          <div class="p-2.5 bg-slate-950 rounded-lg text-[11px] text-slate-300">
+            💡 <em>Service Gateway:</em> Conecta a Object Storage sin que el tráfico salga a internet público.
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
+            05
+          </div>
+          <h3 class="font-bold text-white text-base">Off-box Virtualization (Gen 2)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La arquitectura Gen 2 de Oracle separa la virtualización del hipervisor central. Las tareas de red e I/O corren en tarjetas inteligentes dedicadas (SmartNICs), eliminando el "noisy neighbor" y ofreciendo máximo rendimiento.
+          </p>
+          <div class="p-2.5 bg-slate-950 rounded-lg text-[11px] text-slate-300">
+            💡 <em>Seguridad:</em> Impide que un atacante escape de una VM y comprometa el hipervisor físico.
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-3">
+          <div class="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center font-bold text-sm">
+            06
+          </div>
+          <h3 class="font-bold text-white text-base">Autonomous Database (ADB)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Motor de base de datos totalmente autogestionado con Machine Learning. Se ejecuta sobre hardware Exadata. Sus tres pilares son: <strong>Self-Driving</strong> (auto-tunning), <strong>Self-Securing</strong> (auto-parcheo en caliente sin downtime) y <strong>Self-Repairing</strong>.
+          </p>
+          <div class="p-2.5 bg-slate-950 rounded-lg text-[11px] text-slate-300">
+            💡 <em>SLA:</em> 99.995% de disponibilidad (menos de 2.5 minutos de parada al año).
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="w-2 h-2 rounded-full bg-oracle-red"></span>
+        <span class="text-slate-400">OCI Master Suite • Creado para Exposición de Alta Calidad sobre Oracle Cloud</span>
+      </div>
+      <div>
+        <span>Desarrollado con HTML5, Tailwind CSS y Vanilla JS ES6</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT LOGIC (ES6) -->
+  <script>
+    /* ========================================================
+       1. GLOBAL STATE & NAVIGATION
+       ======================================================== */
+    let activeTab = 'quiz';
+
+    function switchTab(tabId) {
+      activeTab = tabId;
+      const tabs = ['quiz', 'cli', 'calc', 'guide', 'cheatsheet'];
+      
+      // Toggle sections
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (el) {
+          if (t === tabId) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+        if (navBtn) {
+          if (t === tabId) {
+            navBtn.className = "nav-btn px-3 py-2 text-sm font-medium rounded-lg transition-all flex items-center space-x-2 text-white bg-slate-800 border border-slate-700 shadow-sm";
+          } else {
+            navBtn.className = "nav-btn px-3 py-2 text-sm font-medium rounded-lg transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-800/60";
+          }
+        }
+      });
+
+      // Mobile button sync
+      document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+        if (btn.dataset.target === tabId) {
+          btn.className = "mobile-tab-btn whitespace-nowrap px-3 py-1.5 rounded-md bg-slate-800 text-white font-medium border border-slate-700";
+        } else {
+          btn.className = "mobile-tab-btn whitespace-nowrap px-3 py-1.5 rounded-md text-slate-300 font-medium";
+        }
+      });
+
+      // Special initializations if needed
+      if (tabId === 'calc') {
+        calculateTCO();
+      }
+    }
+
+    /* ========================================================
+       2. QUIZ LOGIC (10 PREGUNTAS TÉCNICAS COMPLETAS)
+       ======================================================== */
+    const quizQuestions = [
+      {
+        id: 1,
+        category: "Arquitectura Física",
+        question: "¿Qué componente de la infraestructura física de OCI permite aislar el hardware dentro de un mismo Availability Domain para evitar que una falla física de servidor afecte a múltiples instancias?",
+        options: [
+          "Security Zones",
+          "Fault Domains (FDs)",
+          "Dynamic Routing Gateway (DRG)",
+          "Compartments"
+        ],
+        correct: 1,
+        explanation: "Cada Availability Domain contiene exactamente 3 Fault Domains (FDs). Son agrupaciones independientes de hardware físico, fuentes de alimentación y switches de red. Al distribuir instancias entre FD-1, FD-2 y FD-3, se garantiza alta disponibilidad sin salir del centro de datos."
+      },
+      {
+        id: 2,
+        category: "Estructura Lógica y Seguridad",
+        question: "En OCI, ¿cuál es el mecanismo principal utilizado para aislar recursos por proyecto, departamento o ambiente, y aplicar políticas de control de acceso RBAC?",
+        options: [
+          "Cuentas AWS vinculadas separadas",
+          "Virtual Cloud Networks (VCNs)",
+          "Compartments (Compartimentos)",
+          "Security Lists"
+        ],
+        correct: 2,
+        explanation: "A diferencia de otros proveedores que obligan a crear y gestionar múltiples cuentas de facturación, OCI utiliza 'Compartments'. Son colecciones lógicas globales y anidadas que permiten estructurar recursos y aplicar políticas IAM precisas (ej: 'allow group Devs to manage all-resources in compartment Dev')."
+      },
+      {
+        id: 3,
+        category: "Modelos Multicloud e Híbridos",
+        question: "¿Cuál es la característica principal de la solución 'Oracle Database@Azure'?",
+        options: [
+          "Es un emulador de Oracle Database ejecutándose en contenedores sobre Azure AKS.",
+          "Es hardware OCI Exadata físico desplegado directamente dentro de los centros de datos de Azure conectado por red privada de latencia sub-milisegundo.",
+          "Es una migración obligatoria que transforma Oracle SQL a Microsoft T-SQL.",
+          "Es un túnel VPN IPSec estándar a través de la internet pública."
+        ],
+        correct: 1,
+        explanation: "Oracle Database@Azure despliega hardware de OCI (Exadata Cloud Infrastructure) físicamente coubicado en los centros de datos de Microsoft Azure. Esto proporciona acceso directo y latencia ultra baja (<2ms) entre aplicaciones de Azure y la base de datos Oracle líder sin salir del entorno seguro."
+      },
+      {
+        id: 4,
+        category: "Cómputo Flexible",
+        question: "¿Qué ventaja ofrecen las instancias de cómputo 'Flex' (como VM.Standard.E4.Flex o A1.Flex de Ampere) frente a las familias estándar de otras nubes?",
+        options: [
+          "Obligan a adquirir múltiplos fijos de 4 núcleos y 16 GB de RAM.",
+          "Permiten configurar exactamente la cantidad de vCPUs/OCPUs y la memoria RAM en GB de forma desacoplada y personalizada.",
+          "Solo pueden ejecutarse durante 1 hora antes de reiniciarse.",
+          "Exigen licenciar obligatoriamente todo el socket físico del host."
+        ],
+        correct: 1,
+        explanation: "Las formas Flex de OCI permiten ajustar el número exacto de núcleos y la cantidad de gigabytes de memoria RAM de forma independiente. Esto evita pagar por capacidades sobredimensionadas que no se utilizan, ahorrando hasta un 50% frente a las familias rígidas de AWS o Azure."
+      },
+      {
+        id: 5,
+        category: "Almacenamiento (Block Storage)",
+        question: "¿Cómo regula un arquitecto en OCI el rendimiento en IOPS y Throughput de un 'Block Volume' sin necesidad de recrear el disco o desconectarlo?",
+        options: [
+          "Comprando más discos físicos y haciendo RAID por software en el sistema operativo.",
+          "Modificando el control deslizante de 'Volume Performance Units' (VPUs) entre 0 (Low Cost) y 120 (Ultra High Performance).",
+          "Cambiando el tipo de suscripción del Tenancy completo.",
+          "Los volúmenes en OCI no pueden alterar su rendimiento una vez creados."
+        ],
+        correct: 1,
+        explanation: "OCI Block Volume utiliza VPUs (Volume Performance Units). Puedes ajustar dinámicamente el rendimiento desde 0 VPUs/GB (Low Cost/Backup) hasta 120 VPUs/GB (Ultra High Performance, hasta 300,000 IOPS) al vuelo mediante un slider o CLI, pagando por el rendimiento solo cuando lo necesitas."
+      },
+      {
+        id: 6,
+        category: "Bases de Datos Autónomas",
+        question: "¿Cuáles son los 3 pilares del concepto 'Autonomous Database' (ADB) de Oracle?",
+        options: [
+          "Self-Hosted, Self-Configured, Self-Audited",
+          "Self-Driving, Self-Securing, Self-Repairing",
+          "Manual Tuning, Scheduled Patching, Hot Standby",
+          "Open Source, Single Threaded, Local Storage"
+        ],
+        correct: 1,
+        explanation: "Oracle Autonomous Database se basa en tres premisas impulsadas por Machine Learning: Self-Driving (auto-ajuste de índices y rendimiento continuo), Self-Securing (cifrado automático y parches de seguridad en caliente sin tiempo de inactividad) y Self-Repairing (detección automática de fallos con SLA del 99.995%)."
+      },
+      {
+        id: 7,
+        category: "Estructura de Costes y Red",
+        question: "¿Cuál es la política oficial de OCI respecto al cobro por transferencia de datos saliente (Data Egress) al internet?",
+        options: [
+          "Se cobra desde el primer megabyte a $0.15 por GB.",
+          "Los primeros 10 Terabytes (TB) por mes son completamente gratuitos para cada tenancy, y el excedente tiene una de las tarifas más bajas del mercado.",
+          "Solo es gratis si contratas un circuito FastConnect dedicado.",
+          "El tráfico saliente está prohibido por defecto en OCI."
+        ],
+        correct: 1,
+        explanation: "OCI incluye 10 TB de transferencia de datos saliente (Egress) gratis cada mes por cuenta. Si se supera esa cuota, el gigabyte adicional cuesta aproximadamente $0.0085 USD, lo que representa hasta un 80%-90% de ahorro frente a los ~$0.09/GB de AWS o Azure."
+      },
+      {
+        id: 8,
+        category: "Redes y Conectividad (VCN)",
+        question: "Para que una instancia en una subred privada acceda a Oracle Object Storage para hacer respaldos SIN pasar por la internet pública ni pagar por NAT Gateway, ¿qué recurso de red se debe configurar?",
+        options: [
+          "Internet Gateway (IGW)",
+          "Service Gateway (SGW)",
+          "Local Peering Gateway (LPG)",
+          "Dynamic Routing Gateway (DRG)"
+        ],
+        correct: 1,
+        explanation: "El 'Service Gateway' permite que los recursos de una subred privada en una VCN se comuniquen de forma privada y directa con los servicios públicos de OCI (como Object Storage, Autonomous DB o Registry) a través de la red interna de Oracle, sin asignar IPs públicas ni exponer tráfico a internet."
+      },
+      {
+        id: 9,
+        category: "Herramientas y OCI CLI",
+        question: "¿Cuál es la estructura sintáctica estándar de un comando ejecutado en la terminal OCI CLI?",
+        options: [
+          "oci <action> <service> <resource> --params",
+          "oci <service> <resource> <action> [opciones/flags]",
+          "oracle-cloud run --target=<service> --do=<action>",
+          "cli.oci.com exec --cmd=<action>"
+        ],
+        correct: 1,
+        explanation: "La sintaxis universal de OCI CLI sigue el patrón jerárquico: 'oci <servicio> <recurso> <acción>'. Por ejemplo: 'oci compute (servicio) instance (recurso) launch (acción)' o 'oci os (servicio) bucket (recurso) create (acción)'."
+      },
+      {
+        id: 10,
+        category: "Arquitectura Gen 2 & Virtualización",
+        question: "¿Qué ventaja crítica de seguridad y rendimiento introduce la 'Virtualización Off-box' en la arquitectura Gen 2 de OCI?",
+        options: [
+          "Desactiva todas las tarjetas de red físicas de los servidores.",
+          "Traslada la virtualización de red y almacenamiento fuera del hipervisor a tarjetas inteligentes dedicadas (SmartNICs), aislando por completo al cliente del hipervisor.",
+          "Permite que múltiples usuarios compartan la misma contraseña de root.",
+          "Elimina la necesidad de usar sistemas operativos en las VMs."
+        ],
+        correct: 1,
+        explanation: "La virtualización Off-box descarga la pila de red e I/O en hardware dedicado (SmartNICs). Esto significa que el hipervisor ya no gestiona la red del cliente; si una VM llegase a ser vulnerada, el atacante no puede acceder al plano de control del host físico ni a otros inquilinos (aislamiento total y cero impacto de rendimiento)."
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+    let quizSubmitted = false;
+
+    function renderQuestion() {
+      const q = quizQuestions[currentQuestionIndex];
+      const card = document.getElementById('quiz-card');
+      const answered = userAnswers[q.id] !== undefined;
+      const selectedOption = userAnswers[q.id];
+
+      // Update progress counters
+      document.getElementById('quiz-progress-text').innerText = `Pregunta ${currentQuestionIndex + 1} de ${quizQuestions.length}`;
+      const progressPercent = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+      document.getElementById('quiz-progress-bar').style.width = `${progressPercent}%`;
+
+      // Update live score indicators
+      updateScoreMetrics();
+
+      let optionsHtml = '';
+      q.options.forEach((opt, idx) => {
+        let btnClasses = "w-full text-left p-4 rounded-xl border transition-all text-sm flex items-start space-x-3 ";
+        let badgeClasses = "w-6 h-6 rounded-md flex-shrink-0 flex items-center justify-center font-mono text-xs font-bold ";
+
+        if (!answered) {
+          btnClasses += "bg-slate-950/70 border-slate-800 hover:border-slate-600 hover:bg-slate-800/50 text-slate-200 cursor-pointer";
+          badgeClasses += "bg-slate-800 text-slate-400";
+        } else {
+          // Question has been answered, show correct/incorrect state
+          if (idx === q.correct) {
+            btnClasses += "bg-emerald-950/50 border-emerald-500 text-emerald-100 shadow-md shadow-emerald-950/50";
+            badgeClasses += "bg-emerald-600 text-white";
+          } else if (idx === selectedOption) {
+            btnClasses += "bg-red-950/50 border-red-500 text-red-100 shadow-md shadow-red-950/50";
+            badgeClasses += "bg-red-600 text-white";
+          } else {
+            btnClasses += "bg-slate-950/40 border-slate-900 text-slate-500 opacity-60";
+            badgeClasses += "bg-slate-900 text-slate-600";
+          }
+        }
+
+        const letter = String.fromCharCode(65 + idx);
+        optionsHtml += `
+          <button onclick="handleOptionSelect(${idx})" ${answered ? 'disabled' : ''} class="${btnClasses}">
+            <span class="${badgeClasses}">${letter}</span>
+            <span class="pt-0.5 leading-relaxed">${opt}</span>
+          </button>
+        `;
+      });
+
+      // Explanation box (only visible once answered)
+      let explanationHtml = '';
+      if (answered) {
+        const isCorrect = selectedOption === q.correct;
+        explanationHtml = `
+          <div class="mt-6 p-4 rounded-xl border ${isCorrect ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-200' : 'bg-red-950/30 border-red-500/40 text-red-200'} space-y-2 animate-fadeIn">
+            <div class="flex items-center gap-2 font-bold text-sm">
+              ${isCorrect 
+                ? '<svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> <span>¡Respuesta Correcta!</span>' 
+                : '<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> <span>Respuesta Incorrecta</span>'
+              }
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+              <strong class="text-white">Fundamento Técnico OCI:</strong> ${q.explanation}
+            </p>
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs font-semibold text-oracle-red border border-slate-700">
+              ${q.category}
+            </span>
+            <span class="text-xs text-slate-400">ID Reactivo: OCI-ARC-${String(q.id).padStart(3, '0')}</span>
+          </div>
+
+          <h3 class="text-base sm:text-xl font-bold text-white leading-snug">
+            ${q.question}
+          </h3>
+
+          <div class="grid grid-cols-1 gap-3 pt-2">
+            ${optionsHtml}
+          </div>
+
+          ${explanationHtml}
+
+          <!-- Card Nav Controls -->
+          <div class="flex items-center justify-between pt-6 border-t border-slate-800">
+            <button onclick="prevQuestion()" ${currentQuestionIndex === 0 ? 'disabled' : ''} class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition">
+              ← Anterior
+            </button>
+
+            <div class="flex gap-1 overflow-x-auto max-w-[200px] sm:max-w-none">
+              ${quizQuestions.map((_, i) => `
+                <button onclick="jumpToQuestion(${i})" class="w-6 h-6 rounded text-[11px] font-mono font-bold transition ${
+                  i === currentQuestionIndex 
+                    ? 'bg-oracle-red text-white' 
+                    : userAnswers[quizQuestions[i].id] !== undefined 
+                      ? (userAnswers[quizQuestions[i].id] === quizQuestions[i].correct ? 'bg-emerald-600/70 text-white' : 'bg-red-600/70 text-white')
+                      : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                }">
+                  ${i + 1}
+                </button>
+              `).join('')}
+            </div>
+
+            ${currentQuestionIndex === quizQuestions.length - 1
+              ? `<button onclick="finishQuiz()" ${!answered ? 'disabled' : ''} class="px-5 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition disabled:opacity-40">
+                  Ver Resultados Finales ✓
+                </button>`
+              : `<button onclick="nextQuestion()" ${!answered ? 'disabled' : ''} class="px-5 py-2 rounded-lg text-xs font-semibold bg-oracle-red hover:bg-oracle-darkred text-white transition disabled:opacity-40">
+                  Siguiente →
+                </button>`
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    function handleOptionSelect(optionIdx) {
+      const q = quizQuestions[currentQuestionIndex];
+      if (userAnswers[q.id] !== undefined) return;
+      userAnswers[q.id] = optionIdx;
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion();
+      }
+    }
+
+    function jumpToQuestion(idx) {
+      currentQuestionIndex = idx;
+      renderQuestion();
+    }
+
+    function updateScoreMetrics() {
+      const answeredKeys = Object.keys(userAnswers);
+      const totalAnswered = answeredKeys.length;
+      let correctCount = 0;
+      
+      answeredKeys.forEach(qid => {
+        const question = quizQuestions.find(q => q.id === parseInt(qid));
+        if (question && userAnswers[qid] === question.correct) {
+          correctCount++;
+        }
+      });
+
+      const points = correctCount * 10;
+      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+
+      document.getElementById('quiz-score-badge').innerText = `${points} pts`;
+      document.getElementById('quiz-correct-count').innerText = `${correctCount} / ${totalAnswered}`;
+      document.getElementById('quiz-accuracy').innerText = `${accuracy}%`;
+
+      if (totalAnswered === quizQuestions.length) {
+        document.getElementById('quiz-status-pill').innerText = "Completado";
+        document.getElementById('quiz-status-pill').className = "text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold";
+      }
+    }
+
+    function finishQuiz() {
+      updateScoreMetrics();
+      document.getElementById('quiz-card').classList.add('hidden');
+      const resultsPanel = document.getElementById('quiz-results-panel');
+      resultsPanel.classList.remove('hidden');
+
+      let correctCount = 0;
+      quizQuestions.forEach(q => {
+        if (userAnswers[q.id] === q.correct) correctCount++;
+      });
+      const pct = Math.round((correctCount / quizQuestions.length) * 100);
+
+      document.getElementById('final-score').innerText = `${correctCount} / ${quizQuestions.length}`;
+      document.getElementById('final-percentage').innerText = `${pct}%`;
+
+      const title = document.getElementById('result-title');
+      const subtitle = document.getElementById('result-subtitle');
+      const feedback = document.getElementById('result-feedback-box');
+      const iconContainer = document.getElementById('result-icon-container');
+
+      if (pct >= 80) {
+        title.innerText = "¡Nivel OCI Certified Architect!";
+        title.className = "text-2xl sm:text-3xl font-extrabold text-emerald-400";
+        subtitle.innerText = "Dominio sobresaliente de los conceptos de infraestructura Gen 2, gobernanza y costes.";
+        feedback.innerHTML = `🌟 <strong>Rendimiento Experto:</strong> El equipo demostró un entendimiento sólido de los diferenciales de Oracle Cloud: aislamiento mediante Fault Domains, virtualización Off-box, elasticidad en Block Volume con VPUs y ahorro radical en red (Egress). Listos para liderar la exposición.`;
+        iconContainer.className = "w-20 h-20 rounded-full mx-auto flex items-center justify-center bg-emerald-500/10 border border-emerald-500/30 text-emerald-400";
+      } else if (pct >= 50) {
+        title.innerText = "¡Buen Rendimiento! (En Preparación)";
+        title.className = "text-2xl sm:text-3xl font-extrabold text-amber-400";
+        subtitle.innerText = "Bases sólidas, pero es conveniente afinar conceptos de storage y red antes de las preguntas del jurado.";
+        feedback.innerHTML = `⚠️ <strong>Recomendación de Repaso:</strong> Revisa la pestaña <strong>'Guía Exposición (5 Integrantes)'</strong> para afinar las diapositivas sobre VCN (Service Gateway), formas Flexibles y Autonomous Database.`;
+        iconContainer.className = "w-20 h-20 rounded-full mx-auto flex items-center justify-center bg-amber-500/10 border border-amber-500/30 text-amber-400";
+      } else {
+        title.innerText = "Requiere Repaso Técnico";
+        title.className = "text-2xl sm:text-3xl font-extrabold text-red-400";
+        subtitle.innerText = "Se recomienda repasar la pestaña 'Arquitectura Base' antes de la presentación final.";
+        feedback.innerHTML = `📚 <strong>Plan de Acción:</strong> Utiliza el simulador de terminal y lee detenidamente los fundamentos de Compartments, Fault Domains y la calculadora TCO para dominar el temario.`;
+        iconContainer.className = "w-20 h-20 rounded-full mx-auto flex items-center justify-center bg-red-500/10 border border-red-500/30 text-red-400";
+      }
+    }
+
+    function resetQuiz() {
+      userAnswers = {};
+      currentQuestionIndex = 0;
+      document.getElementById('quiz-card').classList.remove('hidden');
+      document.getElementById('quiz-results-panel').classList.add('hidden');
+      document.getElementById('quiz-status-pill').innerText = "En curso";
+      document.getElementById('quiz-status-pill').className = "text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium";
+      renderQuestion();
+    }
+
+
+    /* ========================================================
+       3. SIMULADOR TERMINAL OCI CLI
+       ======================================================== */
+    const terminalHistory = [];
+    let historyIndex = -1;
+
+    const simulatedResponses = {
+      "help": {
+        type: "text",
+        output: `Comandos OCI CLI Simulados Disponibles:
+  oci iam compartment list                      : Lista los compartimentos del tenancy
+  oci compute instance launch                   : Aprovisiona una nueva máquina virtual flexible
+  oci db autonomous-database create             : Despliega una base de datos Oracle Autonomous
+  oci os bucket create                          : Crea un bucket de Object Storage
+  oci network vcn list                          : Muestra las redes virtuales en la región activa
+  oci ce cluster create                         : Crea un cluster de Kubernetes gestionado (OKE)
+  oci iam user list                             : Lista los usuarios y roles configurados
+  oci limits resource-availability get          : Consulta cuotas de cómputo y GPUs disponibles
+  whoami                                        : Información de identidad autenticada
+  clear                                         : Limpia la pantalla de la terminal
+  help                                          : Despliega esta ayuda técnica`
+      },
+      "whoami": {
+        type: "text",
+        output: `Authenticated User: admin.cloud.architect@mastercorp.com
+Tenancy OCID: ocid1.tenancy.oc1..aaaaaaaamastercorp99
+Active Region: us-ashburn-1 (IAD)
+Federation: Oracle Identity Cloud Service (IAM Identity Domains)`
+      },
+      "oci iam compartment list": {
+        type: "json",
+        data: {
+          "data": [
+            {
+              "compartment-id": "ocid1.tenancy.oc1..aaaaaaaamastercorp99",
+              "defined-tags": { "Operations": { "CostCenter": "4020" } },
+              "description": "Ambiente de Producción Corporativo",
+              "id": "ocid1.compartment.oc1..aaaaaaaaprodcompartment",
+              "is-accessible": true,
+              "lifecycle-state": "ACTIVE",
+              "name": "Production_Workloads",
+              "time-created": "2026-02-14T08:30:00.120Z"
+            },
+            {
+              "compartment-id": "ocid1.tenancy.oc1..aaaaaaaamastercorp99",
+              "defined-tags": { "Operations": { "CostCenter": "1010" } },
+              "description": "Entornos de Sandbox e Integración Continua",
+              "id": "ocid1.compartment.oc1..aaaaaaaadevcompartment",
+              "is-accessible": true,
+              "lifecycle-state": "ACTIVE",
+              "name": "Dev_Testing_Lab",
+              "time-created": "2026-03-01T11:15:22.450Z"
+            }
+          ]
+        }
+      },
+      "oci compute instance launch": {
+        type: "json",
+        data: {
+          "data": {
+            "availability-domain": "UUtq:US-ASHBURN-AD-1",
+            "compartment-id": "ocid1.compartment.oc1..aaaaaaaaprodcompartment",
+            "display-name": "app-backend-worker-01",
+            "fault-domain": "FAULT-DOMAIN-2",
+            "id": "ocid1.instance.oc1.iad.anuwcljsww4u6tycz7p53qwe901",
+            "image-id": "ocid1.image.oc1.iad.aaaaaaaaoel89uek",
+            "lifecycle-state": "PROVISIONING",
+            "shape": "VM.Standard.E4.Flex",
+            "shape-config": {
+              "baseline-ocpu-utilization": "BASELINE_1_1",
+              "memory-in-gbs": 32.0,
+              "ocpus": 4.0,
+              "processor-description": "AMD EPYC 7J13 64-Core Processor"
+            },
+            "source-details": {
+              "boot-volume-size-in-gbs": 50,
+              "source-type": "image"
+            },
+            "time-created": new Date().toISOString()
+          }
+        }
+      },
+      "oci db autonomous-database create": {
+        type: "json",
+        data: {
+          "data": {
+            "autonomous-container-database-id": null,
+            "compartment-id": "ocid1.compartment.oc1..aaaaaaaaprodcompartment",
+            "compute-model": "ECPU",
+            "compute-count": 4,
+            "data-storage-size-in-tbs": 1,
+            "db-name": "PRODADB01",
+            "db-workload": "OLTP",
+            "display-name": "Autonomous-Transaction-Processing-Prod",
+            "id": "ocid1.autonomousdatabase.oc1.iad.abuwcljsoin7728db",
+            "is-auto-scaling-enabled": true,
+            "is-auto-scaling-for-storage-enabled": true,
+            "is-dedicated": false,
+            "lifecycle-state": "PROVISIONING",
+            "license-model": "BRING_YOUR_OWN_LICENSE",
+            "service-console-url": "https://adb.us-ashburn-1.oraclecloud.com/console/index.html?dbid=PRODADB01",
+            "time-created": new Date().toISOString()
+          }
+        }
+      },
+      "oci os bucket create": {
+        type: "json",
+        data: {
+          "data": {
+            "auto-tiering": "InfrequentAccess",
+            "compartment-id": "ocid1.compartment.oc1..aaaaaaaaprodcompartment",
+            "created-by": "ocid1.user.oc1..aaaaaaaacloudadmin",
+            "etag": "a823b190-7f21-43e8-8a9d-54f3b79102c0",
+            "name": "backup-finance-vault-2026",
+            "namespace": "axmastercorp",
+            "public-access-type": "NoPublicAccess",
+            "storage-tier": "Standard",
+            "time-created": new Date().toISOString(),
+            "versioning": "Enabled"
+          }
+        }
+      },
+      "oci network vcn list": {
+        type: "json",
+        data: {
+          "data": [
+            {
+              "cidr-block": "10.0.0.0/16",
+              "compartment-id": "ocid1.compartment.oc1..aaaaaaaaprodcompartment",
+              "default-dhcp-options-id": "ocid1.dhcpoptions.oc1.iad.aaaaaaaaspec",
+              "default-route-table-id": "ocid1.routetable.oc1.iad.aaaaaaaart",
+              "default-security-list-id": "ocid1.securitylist.oc1.iad.aaaaaaaasl",
+              "display-name": "Core_Hub_VCN",
+              "id": "ocid1.vcn.oc1.iad.amaaaaaaww4u6tycaq7",
+              "lifecycle-state": "AVAILABLE",
+              "time-created": "2026-01-10T14:20:00.000Z"
+            }
+          ]
+        }
+      },
+      "oci ce cluster create": {
+        type: "json",
+        data: {
+          "data": {
+            "endpoint-config": {
+              "is-public-ip-enabled": true,
+              "subnet-id": "ocid1.subnet.oc1.iad.aaaaaaaakeendpoint"
+            },
+            "id": "ocid1.cluster.oc1.iad.aaaaaaaamasterokecluster",
+            "kubernetes-version": "v1.30.2",
+            "lifecycle-state": "CREATING",
+            "name": "oke-production-cluster-ashburn",
+            "options": {
+              "admission-controller-options": { "is-pod-security-policy-enabled": false },
+              "persistent-volume-config": { "freeform-tags": {} },
+              "service-lb-config": { "freeform-tags": {} }
+            },
+            "time-created": new Date().toISOString()
+          }
+        }
+      },
+      "oci iam user list": {
+        type: "json",
+        data: {
+          "data": [
+            { "description": "Cloud Lead Architect", "email": "architect@mastercorp.com", "id": "ocid1.user.oc1..usr1", "is-mfa-activated": true, "name": "c.architect" },
+            { "description": "DevOps Engineer", "email": "devops@mastercorp.com", "id": "ocid1.user.oc1..usr2", "is-mfa-activated": true, "name": "d.ops" }
+          ]
+        }
+      },
+      "oci limits resource-availability get": {
+        type: "json",
+        data: {
+          "data": {
+            "available": 128,
+            "fractional-availability": 128.0,
+            "fractional-usage": 16.0,
+            "service-name": "compute",
+            "limit-name": "standard-e4-core-count",
+            "used": 16
+          }
+        }
+      }
+    };
+
+    function syntaxHighlightJSON(json) {
+      if (typeof json != 'string') {
+        json = JSON.stringify(json, undefined, 2);
+      }
+      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'json-number';
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) {
+            cls = 'json-key';
+          } else {
+            cls = 'json-string';
+          }
+        } else if (/true|false/.test(match)) {
+          cls = 'json-boolean';
+        } else if (/null/.test(match)) {
+          cls = 'json-null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+      });
+    }
+
+    function appendToTerminal(command, responseHtml) {
+      const screen = document.getElementById('terminal-screen');
+      const entry = document.createElement('div');
+      entry.className = "space-y-1.5 pt-2 border-t border-slate-900";
+      entry.innerHTML = `
+        <div class="flex items-center space-x-2 text-slate-300">
+          <span class="text-emerald-400 font-bold">cloud-user@oci:~$</span>
+          <span class="font-semibold text-white">${command}</span>
+        </div>
+        <div class="pl-4 text-slate-300 leading-relaxed font-mono">
+          ${responseHtml}
+        </div>
+      `;
+      screen.appendChild(entry);
+      screen.scrollTop = screen.scrollHeight;
+    }
+
+    function handleTerminalSubmit(e) {
+      if (e) e.preventDefault();
+      const inputEl = document.getElementById('terminal-input');
+      const rawCmd = inputEl.value.trim();
+      if (!rawCmd) return;
+
+      terminalHistory.push(rawCmd);
+      historyIndex = terminalHistory.length;
+      inputEl.value = '';
+
+      executeCLICommand(rawCmd);
+    }
+
+    function executeCLICommand(cmd) {
+      const cleanCmd = cmd.toLowerCase().trim();
+
+      if (cleanCmd === 'clear') {
+        clearTerminal();
+        return;
+      }
+
+      // Check simulated dictionary
+      const matchKey = Object.keys(simulatedResponses).find(key => cleanCmd.startsWith(key));
+
+      if (matchKey) {
+        const item = simulatedResponses[matchKey];
+        if (item.type === 'json') {
+          const formatted = syntaxHighlightJSON(item.data);
+          appendToTerminal(cmd, `<pre class="bg-black/40 p-3 rounded-lg border border-slate-800/80 overflow-x-auto">${formatted}</pre>`);
+        } else {
+          appendToTerminal(cmd, `<pre class="text-slate-300 whitespace-pre-wrap">${item.output}</pre>`);
+        }
+      } else {
+        appendToTerminal(cmd, `
+          <div class="text-red-400 space-y-1">
+            <p>Error: OCI-CLI-404: Comando no reconocido o parámetros insuficientes.</p>
+            <p class="text-xs text-slate-400">Intenta escribir <span class="text-emerald-400 font-bold">help</span> o pulsa los botones de comandos rápidos superiores.</p>
+          </div>
+        `);
+      }
+    }
+
+    function insertAndRunCommand(cmd) {
+      document.getElementById('terminal-input').value = cmd;
+      executeCLICommand(cmd);
+      // Ensure tab is active
+      switchTab('cli');
+    }
+
+    function clearTerminal() {
+      const screen = document.getElementById('terminal-screen');
+      screen.innerHTML = `
+        <div class="text-slate-400">
+          <p class="text-slate-200 font-bold mb-1">Oracle Cloud Infrastructure Command Line Interface (OCI CLI)</p>
+          <p>Escribe <span class="text-emerald-400 font-bold">help</span> para consultar la lista de comandos disponibles.</p>
+        </div>
+      `;
+    }
+
+    // Keyboard navigation for terminal history (Up / Down)
+    document.getElementById('terminal-input').addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        if (historyIndex > 0) {
+          historyIndex--;
+          e.target.value = terminalHistory[historyIndex];
+        }
+      } else if (e.key === 'ArrowDown') {
+        if (historyIndex < terminalHistory.length - 1) {
+          historyIndex++;
+          e.target.value = terminalHistory[historyIndex];
+        } else {
+          historyIndex = terminalHistory.length;
+          e.target.value = '';
+        }
+      }
+    });
+
+
+    /* ========================================================
+       4. CALCULADORA DE COSTES Y TCO
+       ======================================================== */
+    function calculateTCO() {
+      const vcpus = parseInt(document.getElementById('calc-vcpu').value);
+      const ramGB = parseInt(document.getElementById('calc-ram').value);
+      const storageTB = parseFloat(document.getElementById('calc-storage').value);
+      const egressTB = parseInt(document.getElementById('calc-egress').value);
+
+      // Label updates
+      document.getElementById('label-vcpu').innerText = `${vcpus} vCPUs`;
+      document.getElementById('label-ram').innerText = `${ramGB} GB RAM`;
+      document.getElementById('label-storage').innerText = `${storageTB} TB SSD`;
+      document.getElementById('label-egress').innerText = `${egressTB} TB / mes`;
+
+      const hoursInMonth = 730;
+
+      // 1. OCI Calculation (Flex Pricing: $0.025/OCPU-hr + $0.0015/GB-hr RAM)
+      // Note: 1 OCPU in OCI = 2 vCPUs (Hyperthreads), so ocpus = vcpus / 2
+      const ociOcpus = Math.max(1, vcpus / 2);
+      const ociComputeMonthly = (ociOcpus * 0.025 + ramGB * 0.0015) * hoursInMonth;
+      
+      // OCI Block Storage ($0.0255 per GB-month + 10 VPUs balanced performance ~$0.017/GB)
+      const ociStorageMonthly = (storageTB * 1024) * 0.0425;
+
+      // OCI Network Egress: First 10 TB are FREE! ($0.00)
+      // Exceeding TBs: $0.0085 per GB (~$8.70 per TB)
+      const ociChargeableEgressTB = Math.max(0, egressTB - 10);
+      const ociEgressMonthly = ociChargeableEgressTB * 1024 * 0.0085;
+
+      const totalOCI = ociComputeMonthly + ociStorageMonthly + ociEgressMonthly;
+
+      // 2. AWS Calculation (Comparable EC2 m6i / c6i instances ~$0.048 per vCPU equivalent hr)
+      const awsComputeMonthly = (vcpus * 0.040 + ramGB * 0.004) * hoursInMonth;
+      // AWS EBS gp3 ($0.08/GB-month + baseline IOPS/throughput fees)
+      const awsStorageMonthly = (storageTB * 1024) * 0.088;
+      // AWS Data Transfer Out ($0.09 per GB, no 10TB free buffer)
+      const awsEgressMonthly = egressTB * 1024 * 0.090;
+
+      const totalAWS = awsComputeMonthly + awsStorageMonthly + awsEgressMonthly;
+
+      // 3. Azure Calculation (Comparable D-series v5)
+      const azureComputeMonthly = (vcpus * 0.042 + ramGB * 0.0042) * hoursInMonth;
+      // Azure Premium SSD / Managed Disks ($0.095/GB)
+      const azureStorageMonthly = (storageTB * 1024) * 0.095;
+      // Azure Outbound ($0.087/GB)
+      const azureEgressMonthly = egressTB * 1024 * 0.087;
+
+      const totalAzure = azureComputeMonthly + azureStorageMonthly + azureEgressMonthly;
+
+      // Savings metrics
+      const baselineCompetitor = Math.min(totalAWS, totalAzure);
+      const monthlySavings = Math.max(0, baselineCompetitor - totalOCI);
+      const savingsPercent = Math.round((monthlySavings / baselineCompetitor) * 100);
+      const annualSavings = monthlySavings * 12;
+
+      // Render Outputs
+      document.getElementById('cost-oci').innerText = `$${Math.round(totalOCI).toLocaleString('en-US')} USD`;
+      document.getElementById('cost-aws').innerText = `$${Math.round(totalAWS).toLocaleString('en-US')} USD`;
+      document.getElementById('cost-azure').innerText = `$${Math.round(totalAzure).toLocaleString('en-US')} USD`;
+
+      document.getElementById('oci-comp-break').innerText = `$${Math.round(ociComputeMonthly)}`;
+      document.getElementById('oci-stor-break').innerText = `$${Math.round(ociStorageMonthly)}`;
+      document.getElementById('oci-net-break').innerText = `$${Math.round(ociEgressMonthly)}`;
+
+      document.getElementById('tco-savings-monthly').innerText = `$${Math.round(monthlySavings).toLocaleString('en-US')} USD`;
+      document.getElementById('tco-savings-annual').innerText = `$${Math.round(annualSavings).toLocaleString('en-US')} USD / año`;
+      document.getElementById('tco-savings-percent').innerText = `-${savingsPercent}% Menos`;
+
+      // Relative bar graphs (max is baseline max)
+      const maxVal = Math.max(totalOCI, totalAWS, totalAzure);
+      document.getElementById('bar-oci').style.width = `${Math.min(100, Math.round((totalOCI / maxVal) * 100))}%`;
+      document.getElementById('bar-aws').style.width = `${Math.min(100, Math.round((totalAWS / maxVal) * 100))}%`;
+      document.getElementById('bar-azure').style.width = `${Math.min(100, Math.round((totalAzure / maxVal) * 100))}%`;
+    }
+
+    function setCalcScenario(scenario) {
+      if (scenario === 'startup') {
+        document.getElementById('calc-vcpu').value = 4;
+        document.getElementById('calc-ram').value = 16;
+        document.getElementById('calc-storage').value = 1;
+        document.getElementById('calc-egress').value = 8;
+      } else if (scenario === 'enterprise') {
+        document.getElementById('calc-vcpu').value = 32;
+        document.getElementById('calc-ram').value = 128;
+        document.getElementById('calc-storage').value = 8;
+        document.getElementById('calc-egress').value = 15;
+      } else if (scenario === 'analytics') {
+        document.getElementById('calc-vcpu').value = 16;
+        document.getElementById('calc-ram').value = 64;
+        document.getElementById('calc-storage').value = 12;
+        document.getElementById('calc-egress').value = 40;
+      }
+      calculateTCO();
+    }
+
+
+    /* ========================================================
+       5. GUÍA DE REPASO: 5 INTEGRANTES DE EXPOSICIÓN
+       ======================================================== */
+    const speakerData = {
+      1: {
+        member: "Integrante 1",
+        slides: "Diapositivas 1 y 2",
+        title: "Fundamentos, Visión Estratégica y Arquitectura Física Global de OCI",
+        keyConcepts: [
+          "<strong>Filosofía Cloud Gen 2:</strong> Explicar por qué Oracle rediseñó su nube desde cero con hardware empresarial sin sobreasignar recursos (no oversubscription).",
+          "<strong>Regiones Globales:</strong> Presencia en más de 48 regiones públicas y gubernamentales, con tarifas homogéneas en todo el planeta.",
+          "<strong>Availability Domains (ADs) & Fault Domains (FDs):</strong> Cómo garantizar redundancia local dentro del datacenter usando los 3 Fault Domains.",
+          "<strong>Red Backbone de Ultra-Baja Latencia:</strong> Interconexiones directas de alta velocidad con latencias por debajo de 1 milisegundo entre ADs."
+        ],
+        cliCommands: [
+          "oci iam region list",
+          "oci iam availability-domain list",
+          "oci iam fault-domain list --availability-domain-name <AD_NAME>"
+        ],
+        juryQuestions: [
+          {
+            q: "¿Cuál es la diferencia técnica fundamental entre un Availability Domain y un Fault Domain?",
+            a: "Un Availability Domain es uno o más centros de datos físicos separados geográficamente dentro de una región, con energía y refrigeración independientes. Un Fault Domain es una subdivisión física dentro de un mismo AD (hardware, racks, PDUs y conmutadores de red separados). OCI proporciona 3 FDs por AD para proteger contra fallos de hardware individuales sin requerir cruzar entre datacenters."
+          },
+          {
+            q: "¿Por qué Oracle afirma que su nube es 'Gen 2' y qué problemas de la nube Gen 1 resolvió?",
+            a: "Las nubes Gen 1 integraban la virtualización de red en el hipervisor de los servidores donde residían las máquinas virtuales de los clientes, lo que causaba 'noisy neighbors' y vulnerabilidades de seguridad. OCI Gen 2 implementó 'Off-box Virtualization' mediante SmartNICs dedicadas, desacoplando la red del procesador central y garantizando rendimiento predecible y aislamiento físico absoluto."
+          }
+        ]
+      },
+      2: {
+        member: "Integrante 2",
+        slides: "Diapositivas 3 y 4",
+        title: "Estrategias Multicloud y Soluciones Híbridas de Misión Crítica",
+        keyConcepts: [
+          "<strong>Oracle Database@Azure & AWS Interconnect:</strong> La alianza histórica donde hardware Exadata de OCI se instala físicamente en datacenters de Microsoft y AWS para latencia submilisegundo.",
+          "<strong>Nube Híbrida: Exadata Cloud@Customer:</strong> Llevar toda la potencia y automatización de la nube de Oracle dentro del propio centro de datos del cliente.",
+          "<strong>OCI Dedicated Region Cloud@Customer:</strong> Toda una región completa de OCI (con más de 100 servicios IaaS/PaaS) instalada 'on-premises' para cumplir normativas estrictas de soberanía de datos.",
+          "<strong>Modelos de Consumo Multicloud:</strong> Conexión sin tarifas predatorias de red entre nubes a través de FastConnect y Megaport."
+        ],
+        cliCommands: [
+          "oci fast-connect virtual-circuit list",
+          "oci db autonomous-database create --is-dedicated true"
+        ],
+        juryQuestions: [
+          {
+            q: "Si un cliente ya tiene toda su arquitectura en Azure, ¿por qué adoptaría OCI en lugar de usar Azure SQL Database?",
+            a: "Porque aplicaciones empresariales críticas (SAP, Oracle E-Business Suite, transaccionales bancarias) requieren el motor de base de datos Oracle con clustering RAC (Real Application Clusters) y rendimiento Exadata. Con 'Oracle Database@Azure', el cliente mantiene su front-end en Azure pero conecta su base de datos a un Exadata físico gestionado por OCI en la misma sala, eliminando el coste y la latencia de salir a internet."
+          },
+          {
+            q: "¿Qué diferencia existe entre Exadata Cloud@Customer y una Dedicated Region?",
+            a: "Exadata Cloud@Customer lleva específicamente el servicio de base de datos Oracle Exadata al centro de datos local del cliente. Por otro lado, OCI Dedicated Region instala la plataforma completa de OCI (Compute, Object Storage, OKE Kubernetes, IA, Analytics) en el centro de datos del cliente, operada al 100% por Oracle con el mismo modelo de pago por uso."
+          }
+        ]
+      },
+      3: {
+        member: "Integrante 3",
+        slides: "Diapositivas 5 y 6",
+        title: "Servicios Nucleares de Infraestructura (Cómputo, Redes y Almacenamiento)",
+        keyConcepts: [
+          "<strong>Cómputo Flexible (Flex Shapes):</strong> Ajustar vCPUs y memoria RAM con precisión milimétrica sin verse forzado a duplicar tamaños estándar predefinidos.",
+          "<strong>Virtual Cloud Network (VCN):</strong> Subnets públicas y privadas, tablas de enrutamiento y el rol indispensable de 'Service Gateway' para tráfico privado.",
+          "<strong>Seguridad de Red:</strong> Security Lists (a nivel de subred) vs Network Security Groups - NSGs (a nivel de interfaz VNIC granular).",
+          "<strong>OCI Block Volume con VPUs:</strong> Elasticidad dinámica de IOPS/throughput desde 0 hasta 120 VPUs por gigabyte sin desconectar discos."
+        ],
+        cliCommands: [
+          "oci compute instance launch --shape VM.Standard.E4.Flex --shape-config '{\"ocpus\":4,\"memoryInGBs\":32}'",
+          "oci bv volume update --volume-id <OCID> --vpus-per-gb 20",
+          "oci network nsg create --compartment-id <OCID> --vcn-id <VCN_OCID>"
+        ],
+        juryQuestions: [
+          {
+            q: "¿Cuándo se debe recomendar un Network Security Group (NSG) en lugar de una Security List en OCI?",
+            a: "Oracle recomienda priorizar Network Security Groups (NSGs). Las Security Lists aplican reglas a todas las instancias conectadas a una subred entera. En cambio, los NSGs permiten asignar políticas de firewall directamente a tarjetas de red virtuales (VNICs) específicas, permitiendo segmentar servidores web y bases de datos dentro de la misma subred sin crear subredes innecesarias."
+          },
+          {
+            q: "¿Cómo impacta la forma Flexible en los costes de licenciamiento de software?",
+            a: "Muchos motores de software (como bases de datos o middlewares propietarios) se licencian por núcleo. En AWS o Azure, si necesitas 36 GB de RAM te obligan a saltar a una instancia de 8 o 16 vCPUs, duplicando el costo de licencias de software. En OCI Flex puedes elegir exactamente 2 núcleos y 36 GB de RAM, minimizando el impacto de licencias."
+          }
+        ]
+      },
+      4: {
+        member: "Integrante 4",
+        slides: "Diapositivas 7 y 8",
+        title: "Bases de Datos Autónomas y Capa de Plataforma Moderna (PaaS, OKE e IA)",
+        keyConcepts: [
+          "<strong>Oracle Autonomous Database (ADB):</strong> Explicar los tres modos: Autonomous Transaction Processing (ATP), Autonomous Data Warehouse (ADW) y Autonomous JSON.",
+          "<strong>Auto-escalado Elástico:</strong> Crecimiento instantáneo de hasta 3 veces los cores asignados para absorber picos de tráfico en segundos sin intervención humana.",
+          "<strong>OKE (Oracle Container Engine for Kubernetes):</strong> Cluster de Kubernetes nativo gestionado sin coste adicional por el plano de control (Control Plane gratuito).",
+          "<strong>Servicios de Inteligencia Artificial de OCI:</strong> Modelos fundacionales dedicados de Cohere y Meta Llama sobre infraestructura de supercomputación GPU Nvidia H100."
+        ],
+        cliCommands: [
+          "oci db autonomous-database create --db-name SALESDB --cpu-core-count 2 --is-auto-scaling-enabled true",
+          "oci ce cluster create --name prod-k8s-cluster",
+          "oci generative-ai model list"
+        ],
+        juryQuestions: [
+          {
+            q: "¿Cómo logra Autonomous Database aplicar parches de seguridad de 'Día Cero' sin que las aplicaciones se desconecten?",
+            a: "Se apoya en la tecnología 'Oracle RAC' (Real Application Clusters) y la capacidad 'Application Continuity'. ADB aplica los parches de forma rodante nodo por nodo en el cluster subyacente. Las transacciones en vuelo son drenadas y reanudadas automáticamente en el siguiente nodo sin arrojar errores de conexión TCP a los usuarios."
+          },
+          {
+            q: "¿Por qué OCI se ha convertido en el destino preferido para entrenar modelos de Inteligencia Artificial Generativa?",
+            a: "Por su red de cluster 'RDMA over Converged Ethernet' (RoCE v2). Conecta decenas de miles de GPUs Nvidia (H100/H200/Blackwell) con ancho de banda de hasta 3.2 Tbps y latencia sub-microsegundo, eliminando los cuellos de botella de red durante el entrenamiento de LLMs gigantes."
+          }
+        ]
+      },
+      5: {
+        member: "Integrante 5",
+        slides: "Diapositivas 9 y 10",
+        title: "Ingeniería Financiera (TCO), Gobernanza Corporativa y Resumen de Cierre",
+        keyConcepts: [
+          "<strong>Desmitificación de Costes:</strong> Explicar el paquete de 10 TB mensuales de salida de red (Egress) totalmente gratis y precios idénticos en todas las regiones.",
+          "<strong>Gobernanza con Compartimentos e IAM:</strong> Políticas declarativas en lenguaje natural (`Allow group Auditing to read all-resources in tenancy`).",
+          "<strong>Seguridad Proactiva y Gratuita:</strong> OCI Cloud Guard (detección continua de malas configuraciones) y Security Zones (zonas que bloquean acciones inseguras en tiempo real).",
+          "<strong>Conclusión Ejecutiva:</strong> Por qué OCI es la nube con mejor relación costo-rendimiento para empresas con cargas de trabajo de misión crítica."
+        ],
+        cliCommands: [
+          "oci iam policy create --compartment-id <OCID> --statements '[\"Allow group SecOps to inspect all-resources in tenancy\"]'",
+          "oci cloud-guard target create",
+          "oci usage-api usage-summary request-summarized-usages"
+        ],
+        juryQuestions: [
+          {
+            q: "¿Qué sucede si una empresa comete un error humano e intenta exponer un bucket privado a internet?",
+            a: "Si el compartimento está asociado a una 'OCI Security Zone', la acción es rechazada automáticamente por el plano de control antes de ejecutarse. Además, OCI Cloud Guard detecta cualquier desviación de la postura de seguridad y puede ejecutar un 'Responder Rule' automatizado que revoca los permisos públicos en cuestión de segundos."
+          },
+          {
+            q: "¿Cuál es el resumen de 30 segundos que define por qué una empresa debe elegir OCI frente a los otros dos gigantes?",
+            a: "OCI ofrece: 1) Hasta un 50% de ahorro en cómputo gracias a sus formas flexibles y almacenamiento con VPUs adaptativos; 2) Los primeros 10 TB de salida de datos gratis cada mes con precios uniformes en cualquier región; y 3) La única plataforma capaz de ejecutar la base de datos empresarial número 1 en modo 100% autónomo y multicloud nativo."
+          }
+        ]
+      }
+    };
+
+    let activeSpeakerId = 1;
+
+    function selectSpeaker(speakerId) {
+      activeSpeakerId = speakerId;
+      
+      // Update pills
+      for (let i = 1; i <= 5; i++) {
+        const pill = document.getElementById(`speaker-tab-${i}`);
+        if (i === speakerId) {
+          pill.className = "speaker-pill p-3 sm:p-4 rounded-xl text-left border transition-all bg-slate-900 border-oracle-red shadow-lg shadow-oracle-red/10";
+          pill.querySelector('span:first-child').className = "text-[10px] font-bold uppercase tracking-wider text-oracle-red block mb-1";
+          pill.querySelector('span:nth-child(2)').className = "font-bold text-sm text-white block";
+        } else {
+          pill.className = "speaker-pill p-3 sm:p-4 rounded-xl text-left border transition-all bg-slate-900/60 border-slate-800 hover:border-slate-700";
+          pill.querySelector('span:first-child').className = "text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1";
+          pill.querySelector('span:nth-child(2)').className = "font-bold text-sm text-slate-300 block";
+        }
+      }
+
+      renderSpeakerDetails(speakerId);
+    }
+
+    function renderSpeakerDetails(speakerId) {
+      const data = speakerData[speakerId];
+      const container = document.getElementById('speaker-content-area');
+
+      let questionsHtml = data.juryQuestions.map((item, idx) => `
+        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+          <div class="flex items-start gap-2">
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-xs font-bold font-mono">Q${idx + 1}</span>
+            <h5 class="text-sm font-bold text-white leading-snug">${item.q}</h5>
+          </div>
+          <div class="pl-7 text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <strong class="text-emerald-400">Respuesta Modelo Sugerida:</strong> ${item.a}
+          </div>
+        </div>
+      `).join('');
+
+      let conceptsHtml = data.keyConcepts.map(c => `
+        <li class="flex items-start space-x-2 text-xs sm:text-sm text-slate-300">
+          <span class="text-oracle-red mt-0.5 font-bold">▸</span>
+          <span>${c}</span>
+        </li>
+      `).join('');
+
+      let cliChipsHtml = data.cliCommands.map(cmd => `
+        <button onclick="insertAndRunCommand('${cmd}')" class="px-3 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-slate-700 font-mono text-xs text-left transition flex items-center justify-between gap-3 group">
+          <span>${cmd}</span>
+          <span class="text-emerald-400 group-hover:translate-x-0.5 transition-transform text-[11px]">Probar en CLI ↵</span>
+        </button>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-slate-800">
+          <div>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-oracle-red/20 text-oracle-red border border-oracle-red/30">
+              ${data.slides}
+            </span>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-white mt-1.5">${data.member}: ${data.title}</h3>
+          </div>
+          <button onclick="simulateSurpriseQuestion(${speakerId})" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold border border-amber-500/30 flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Simular Pregunta del Jurado
+          </button>
+        </div>
+
+        <!-- 2 Columns: Key Concepts & CLI Commands -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 space-y-3">
+            <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4 text-oracle-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              Puntos Técnicos Clave a Exponer (Guion de Apoyo)
+            </h4>
+            <ul class="space-y-2.5 bg-slate-950/50 p-4 rounded-xl border border-slate-800/80">
+              ${conceptsHtml}
+            </ul>
+          </div>
+
+          <div class="lg:col-span-5 space-y-3">
+            <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              Comandos OCI CLI a Mencionar / Demostrar
+            </h4>
+            <div class="space-y-2">
+              ${cliChipsHtml}
+            </div>
+          </div>
+        </div>
+
+        <!-- Expected Jury Questions Section -->
+        <div class="space-y-3 pt-2">
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Preguntas Frecuentes del Docente / Jurado y Respuestas Modelo
+          </h4>
+          <div class="grid grid-cols-1 gap-3">
+            ${questionsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function simulateSurpriseQuestion(speakerId) {
+      const data = speakerData[speakerId];
+      const randomQ = data.juryQuestions[Math.floor(Math.random() * data.juryQuestions.length)];
+      
+      alert(`[SIMULACIÓN DE JURADO PARA ${data.member.toUpperCase()}]:\n\n"${randomQ.q}"\n\n---\nCLAVE DE RESPUESTA:\n${randomQ.a}`);
+    }
+
+    // Rehearsal Timer Logic (4 minutes default)
+    let timerSeconds = 240;
+    let timerInterval = null;
+    let isTimerRunning = false;
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-toggle-btn');
+      if (isTimerRunning) {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        btn.innerText = "Reanudar";
+        btn.className = "px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition";
+      } else {
+        isTimerRunning = true;
+        btn.innerText = "Pausar";
+        btn.className = "px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-medium transition";
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            renderTimer();
+          } else {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            btn.innerText = "Tiempo Cumplido";
+            alert(`¡Tiempo de presentación cumplido para ${speakerData[activeSpeakerId].member}! (4:00 min)`);
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      timerSeconds = 240;
+      renderTimer();
+      const btn = document.getElementById('timer-toggle-btn');
+      btn.innerText = "Iniciar";
+      btn.className = "px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition";
+    }
+
+    function renderTimer() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      const timerEl = document.getElementById('rehearsal-timer');
+      timerEl.innerText = formatted;
+      if (timerSeconds < 30) {
+        timerEl.className = "font-mono text-lg font-bold text-red-400 animate-pulse";
+      } else {
+        timerEl.className = "font-mono text-lg font-bold text-white";
+      }
+    }
+
+
+    /* ========================================================
+       INITIALIZATION CALLS
+       ======================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      renderQuestion();
+      calculateTCO();
+      selectSpeaker(1);
+    });
+  </script>
+</body>
+</html>
